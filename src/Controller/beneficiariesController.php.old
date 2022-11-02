@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
+//  * @Route(path="/api/")
+
 /**
  * Class beneficiariesController
  * @package App\Controller
@@ -31,68 +33,57 @@ class beneficiariesController {
         $data = json_decode($request->getContent(), true);
 
         $names = $data['names'];
+        $firstSurname = $data['firstSurname'];
+        $secondSurname = $data['secondSurname'];
+        $celPhone = $data['celPhone'];
+        $typeIdentification = $data['typeIdentification'];
+        $numberIdentification = $data['numberIdentification'];
         $born = $data['born'];
         $email = $data['email'];
         $signture = $data['signture'];
         $country = $data['country'];
         $province = $data['province'];
         $location = $data['location'];
-        $firstSurname = $data['firstSurname'];
-        $secondSurname = $data['secondSurname'];
-        $celPhone = $data['celPhone'];
-        $typeIdentification = $data['typeIdentification'];
-        $numberIdentification = $data['numberIdentification'];        
         $nameRoad = $data['nameRoad'];
         $otherDirection = $data['otherDirection'];
-        $statusDocuments = $data['statusDocuments'];
-        $familyUnit = $data['familyUnit'];
         $termsConditions = $data['termsConditions'];
 
-        // if (empty($names) || empty($born) || empty($email) || empty($signture) || empty($country) || empty($province) || empty($location) || empty($firstSurname) || empty($secondSurname) || empty($celPhone) || empty($typeIdentification) || empty($numberIdentification) || empty($nameRoad) || empty($otherDirection) || empty($statusDocuments) || empty($familyUnit) || empty($termsConditions)) {
-        //     throw new NotFoundHttpException('Expecting mandatory parameters!');
-        // }
+        if (empty($name) || empty($typeIdentification)) {
+            throw new NotFoundHttpException('Expecting mandatory parameters!');
+        }
 
-        $this->beneficiariesRepository->saveBeneficiaries($names, $firstSurname, $secondSurname, $celPhone, $typeIdentification, $numberIdentification, $born, $email, $signture, $country, $province, $location, $nameRoad, $otherDirection, $termsConditions, $statusDocuments, $familyUnit);
+        $this->beneficiariesRepository->saveUser($names, $firstSurname, $secondSurname, $celPhone, $typeIdentification, $numberIdentification, $born, $email, $signture, $country, $province, $location, $nameRoad, $otherDirection, $termsConditions);
 
-        return new JsonResponse(['status' => 'Beneficiario Creado!'], Response::HTTP_CREATED);
+        return new JsonResponse(['status' => 'User created!'], Response::HTTP_CREATED);
     }
 
     /**
-     * @Route("beneficiarie/{numberIdentification}", name="get_one_beneficiarie", methods={"GET"})
+     * @Route("beneficiarie/{typeIdentification}", name="get_one_beneficiarie", methods={"GET"})
      */
     public function get($numberIdentification): JsonResponse
     {
-        try {
-            $user = $this->beneficiariesRepository->findOneBy(['numberIdentification' => $numberIdentification]);
+        $user = $this->beneficiariesRepository->findOneBy(['numberIdentification' => $numberIdentification]);
 
-            $data = [
-                'id' => $user->getId(),
-                'names' => $user->getNames(),
-                'firstSurname' => $user->getFirstSurname(),
-                'secondSurname' => $user->getSecondSurname(),
-                'celPhone' => $user->getCelPhone(),
-                'typeIdentification' => $user->getTypeIdentification(),
-                'numberIdentification' => $user->getNumberIdentification(),
-                'born' => $user->getBorn(),
-                'email' => $user->getEmail(),
-                'signture' => $user->getSignture(),
-                'country' => $user->getCountry(),
-                'province' => $user->getProvince(),
-                'location' => $user->getLocation(),
-                'nameRoad' => $user->getNameRoad(),
-                'otherDirection' => $user->getOtherDirection(),
-                'termsConditions' => $user->getTermsConditions(),
-            ];
+        $data = [
+            'id' => $user->getId(),
+            'names' => $user->getNames(),
+            'firstSurname' => $user->getFirstSurname(),
+            'secondSurname' => $user->getSecondSurname(),
+            'celPhone' => $user->getCelPhone(),
+            'typeIdentification' => $user->getTypeIdentification(),
+            'numberIdentification' => $user->getNumberIdentification(),
+            'born' => $user->getBorn(),
+            'email' => $user->getEmail(),
+            'signture' => $user->getSignture(),
+            'country' => $user->getCountry(),
+            'province' => $user->getProvince(),
+            'location' => $user->getLocation(),
+            'nameRoad' => $user->getNameRoad(),
+            'otherDirection' => $user->getOtherDirection(),
+            'termsConditions' => $user->getTermsConditions(),
+        ];
 
-            return new JsonResponse($data, Response::HTTP_OK);
-
-        } catch (\Error $e) {
-            $data = [
-                'error' => 'Número de Identificación no encontrado SYM'
-            ];
-            return new JsonResponse($data, Response::HTTP_OK);
-        }
-        
+        return new JsonResponse($data, Response::HTTP_OK);
     }
 
     /**
@@ -170,3 +161,5 @@ class beneficiariesController {
         return new JsonResponse(['status' => 'User deleted'], Response::HTTP_OK);
     }
 }
+
+?>

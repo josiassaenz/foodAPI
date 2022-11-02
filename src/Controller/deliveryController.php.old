@@ -1,17 +1,12 @@
 <?php
-
 namespace App\Controller;
 
 use App\Repository\DeliveryRepository;
-use App\Repository\BeneficiariesRepository;
-use App\Entity\Delivery;
-use App\Entity\Beneficiaries;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Class usersController
@@ -21,18 +16,16 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class deliveryController {
     private $deliveryRepository;
-    private $beneficiariesRepository;
 
-    public function __construct(DeliveryRepository $deliveryRepository , BeneficiariesRepository $beneficiariesRepository)
+    public function __construct(DeliveryRepository $deliveryRepository)
     {
         $this->deliveryRepository = $deliveryRepository;
-        $this->beneficiariesRepository = $beneficiariesRepository;
     }
 
     /**
-     * @Route("delivery", name="add_delivery", methods={"POST"})
+     * @Route("delivery_add", name="add_delivery", methods={"POST"})
      */
-    public function add(Request $request, ManagerRegistry $doctrine): JsonResponse
+    public function add(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -46,7 +39,7 @@ class deliveryController {
 
         $this->deliveryRepository->saveDelivery($idBeneficiarie, $kg, $date);
 
-        return new JsonResponse(['status' => 'Datos registrados!'], Response::HTTP_CREATED);
+        return new JsonResponse(['status' => 'Delivery created!'], Response::HTTP_CREATED);
     }
 
     /**
@@ -61,44 +54,6 @@ class deliveryController {
             'kg' => $delivery->getKg(),
             'date' => $delivery->getDate(),
         ];
-
-        return new JsonResponse($data, Response::HTTP_OK);
-    }
-
-    /**
-     * @Route("deliverysDate", name="get_date_delivery", methods={"GET"})
-     */
-    public function getAllDeliverysDate(): JsonResponse
-    {
-        // $deliverysDate = $this->deliveryRepository->findByDateDeliverys();
-        $deliverysDate = $this->deliveryRepository->findAll();
-        $users = $this->beneficiariesRepository->findAll();
-        // $customer = $deliverysDate->getRepository(Beneficiafies::class)->findAll();
-        $data = [];
-
-        // $combined = array_combine($deliverysDate, $users);
-        $before = 0;
-        $after = 0;
-
-        foreach ($deliverysDate as $delivery) {
-            $before = $delivery->getId();
-            // echo 'Antes: '.$before;
-            foreach ($users as $user) {
-                if($before !== $after){
-                    $data[] = [
-                        'id' => $delivery->getId(),
-                        'names' => $user->getNames(),
-                        'firstSurname' => $user->getFirstSurname(),
-                        'secondSurname' => $user->getSecondSurname(),
-                        'celPhone' => $user->getCelPhone(),
-                        'kg' => $delivery->getKg(),
-                        'signture' => $user->getSignture(),
-                    ];
-                }
-                $after = $before;
-                // echo 'después: '.$after;
-            }
-        }
 
         return new JsonResponse($data, Response::HTTP_OK);
     }
@@ -152,3 +107,5 @@ class deliveryController {
         return new JsonResponse(['status' => 'Delivery deleted'], Response::HTTP_OK);
     }
 }
+
+?>

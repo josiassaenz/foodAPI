@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Beneficiaries
  *
- * @ORM\Table(name="beneficiaries", indexes={@ORM\Index(name="fk_identification", columns={"type_identification"}), @ORM\Index(name="fk_countries", columns={"country"}), @ORM\Index(name="fk_name_road", columns={"name_road"}), @ORM\Index(name="fk_provinces", columns={"province"}), @ORM\Index(name="fk_location", columns={"location"})})
+ * @ORM\Table(name="beneficiaries", indexes={@ORM\Index(name="fk_identification", columns={"type_identification"}), @ORM\Index(name="fk_countries", columns={"country"}), @ORM\Index(name="fk_name_road", columns={"name_road"}), @ORM\Index(name="fk_provinces", columns={"province"}), @ORM\Index(name="fk_status_documents", columns={"status_documents"}), @ORM\Index(name="fk_location", columns={"location"})})
  * @ORM\Entity
  */
 class Beneficiaries
@@ -45,7 +45,7 @@ class Beneficiaries
     /**
      * @var string
      *
-     * @ORM\Column(name="signture", type="string", length=255, nullable=false)
+     * @ORM\Column(name="signture", type="text", length=65535, nullable=false)
      */
     private $signture;
 
@@ -87,9 +87,24 @@ class Beneficiaries
     /**
      * @var int
      *
+     * @ORM\Column(name="family_unit", type="integer", nullable=false)
+     */
+    private $familyUnit;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="terms_conditions", type="integer", nullable=false)
      */
     private $termsConditions;
+
+    /**
+     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="status_documents", type="date", nullable=false)
+     */
+    private $statusDocuments;
 
     /**
      * @var \Countries
@@ -163,7 +178,12 @@ class Beneficiaries
         return $this->born;
     }
 
-    public function setBorn(\DateTimeInterface $born): self
+    /**
+     * 
+     * @param \DateTime $born
+     * @return Beneficiaries
+    */
+    public function setBorn(\DateTime $born): self
     {
         $this->born = $born;
 
@@ -254,6 +274,18 @@ class Beneficiaries
         return $this;
     }
 
+    public function getFamilyUnit(): ?int
+    {
+        return $this->familyUnit;
+    }
+
+    public function setFamilyUnit(int $familyUnit): self
+    {
+        $this->familyUnit = $familyUnit;
+
+        return $this;
+    }
+
     public function getTermsConditions(): ?int
     {
         return $this->termsConditions;
@@ -262,6 +294,18 @@ class Beneficiaries
     public function setTermsConditions(int $termsConditions): self
     {
         $this->termsConditions = $termsConditions;
+
+        return $this;
+    }
+
+    public function getStatusDocuments(): ?StatusDocuments
+    {
+        return $this->statusDocuments;
+    }
+
+    public function setStatusDocuments(?StatusDocuments $statusDocuments): self
+    {
+        $this->statusDocuments = $statusDocuments;
 
         return $this;
     }

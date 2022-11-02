@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="App\Entity\Delivery" table="delivery">
-    <indexes>
-      <index name="fk_id_beneficiary" columns="id_beneficiarie"/>
-    </indexes>
+  <entity name="App\Entity\StatusDocuments" table="status_documents">
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="idBeneficiarie" type="integer" column="id_beneficiarie" nullable="false">
+    <field name="status" type="string" column="status" length="20" nullable="true">
       <options>
-        <option name="unsigned"/>
+        <option name="fixed"/>
+        <option name="default">NULL</option>
       </options>
     </field>
-    <field name="kg" type="float" column="kg" precision="255" scale="2" nullable="false"/>
-    <field name="date" type="date" column="date" nullable="false"/>
   </entity>
 </doctrine-mapping>

@@ -3,6 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Beneficiaries;
+use App\Entity\StatusDocuments;
+use App\Entity\Countries;
+use App\Entity\Location;
+use App\Entity\Provinceses;
+use App\Entity\Identification;
+use App\Entity\NameRoad;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 // use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,33 +28,38 @@ class BeneficiariesRepository extends ServiceEntityRepository
         $this->manager = $manager;
     }
 
-    public function saveUsers($names, $firstSurname, $secondSurname, $email, $celPhone, $password, $token, $isActive)
+    /**
+     * @param \DateTime $born
+    */
+    public function saveBeneficiaries($names, $firstSurname, $secondSurname, $celPhone, $typeIdentification, $numberIdentification, $born, $email, $signture, $country, $province, $location, $nameRoad, $otherDirection, $termsConditions, $statusDocuments, $familyUnit)
     {
-        $newUsers = new Users();
+        $newBeneficiarie = new Beneficiaries();
 
-        $newUsers
+        $newBeneficiarie
 
             ->setNames($names)
             ->setFirstSurname($firstSurname)
             ->setSecondSurname($secondSurname)
             ->setCelPhone($celPhone)
-            ->setTypeIdentification($typeIdentification)
+            ->setTypeIdentification($this->manager->getReference(Identification::class, $typeIdentification))
             ->setNumberIdentification($numberIdentification)
-            ->setBorn($born)
+            ->setBorn(\DateTime::createFromFormat('Y-m-d', $born))
             ->setEmail($email)
             ->setSignture($signture)
-            ->setCountry($country)
-            ->setProvince($province)
-            ->setLocation($location)
-            ->setNameRoad($nameRoad)
+            ->setCountry($this->manager->getReference(Countries::class, $country))
+            ->setProvince($this->manager->getReference(Provinceses::class, $province))
+            ->setLocation($this->manager->getReference(Location::class, $location))
+            ->setNameRoad($this->manager->getReference(NameRoad::class, $nameRoad))
             ->setOtherDirection($otherDirection)
-            ->setTermsConditions($termsConditions);
+            ->setTermsConditions($termsConditions)
+            ->setStatusDocuments($this->manager->getReference(StatusDocuments::class, $statusDocuments))
+            ->setFamilyUnit($familyUnit);
 
-        $this->manager->persist($newUsers);
+        $this->manager->persist($newBeneficiarie);
         $this->manager->flush();
     }
 
-    public function updateUsers(Users $users): Users
+    public function updateBeneficiarie(Beneficiaries $users): Beneficiaries
     {
         $this->manager->persist($users);
         $this->manager->flush();
@@ -57,14 +68,14 @@ class BeneficiariesRepository extends ServiceEntityRepository
     }
 
 
-    public function removeUsers(Users $users)
+    public function removeBeneficiarie(Beneficiaries $users)
     {
         $this->manager->remove($users);
         $this->manager->flush();
     }
 
     // /**
-    //  * @return Users[] Returns an array of Users objects
+    //  * @return Beneficiaries[] Returns an array of Beneficiaries objects
     //  */
     /*
     public function findByExampleField($value)
@@ -81,7 +92,7 @@ class BeneficiariesRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Users
+    public function findOneBySomeField($value): ?Beneficiaries
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.exampleField = :val')

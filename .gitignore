@@ -9,6 +9,7 @@
 /public/bundles/
 /var/
 /vendor/
+/.node_modules
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###
@@ -18,4 +19,4 @@
 ###> SQL <###
 /*.sql
 ###> SQL <###
-
+node_modules

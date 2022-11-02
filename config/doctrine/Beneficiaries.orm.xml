@@ -6,6 +6,7 @@
       <index name="fk_countries" columns="country"/>
       <index name="fk_name_road" columns="name_road"/>
       <index name="fk_provinces" columns="province"/>
+      <index name="fk_status_documents" columns="status_documents"/>
       <index name="fk_location" columns="location"/>
     </indexes>
     <id name="id" type="integer" column="id">
@@ -23,7 +24,7 @@
         <option name="default">NULL</option>
       </options>
     </field>
-    <field name="signture" type="string" column="signture" length="255" nullable="false">
+    <field name="signture" type="text" column="signture" length="65535" nullable="false">
       <options>
         <option name="fixed"/>
       </options>
@@ -55,11 +56,21 @@
         <option name="default">NULL</option>
       </options>
     </field>
+    <field name="familyUnit" type="integer" column="family_unit" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
     <field name="termsConditions" type="integer" column="terms_conditions" nullable="false">
       <options>
         <option name="unsigned"/>
       </options>
     </field>
+    <many-to-one field="statusDocuments" target-entity="StatusDocuments" fetch="LAZY">
+      <join-columns>
+        <join-column name="status_documents" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
     <many-to-one field="country" target-entity="Countries" fetch="LAZY">
       <join-columns>
         <join-column name="country" referenced-column-name="id"/>
